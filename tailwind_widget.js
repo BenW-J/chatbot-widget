@@ -218,16 +218,38 @@
     function handleSend() {
       const msg = input.value.trim();
       if (!msg) return;
+    
       appendMessage(msg, "user");
       input.value = "";
       input.style.height = "auto";
-
+    
       const typing = appendTypingIndicator();
-      setTimeout(() => {
-        removeTypingIndicator(typing);
-        appendMessage("Thanks! We'll be in touch shortly.", "bot");
-      }, 1000);
+    
+      // 🔁 Call your Cloudflare Worker
+      fetch("https://buildconnect1.bwagjor.workers.dev", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userQuery: msg, threadId }) // send it
+      })
+        .then(res => res.json())
+        .then(data => {
+          threadId = data.threadId;
+          removeTypingIndicator(typing);
+          if (data.reply) {
+            appendMessage(data.reply.trim(), "bot");
+          } else if (data.error) {
+            appendMessage("Error: " + data.error, "bot");
+          } else {
+            appendMessage("Sorry, no reply received.", "bot");
+          }
+        })             
+        .catch(err => {
+          removeTypingIndicator(typing);
+          appendMessage("Sorry, something went wrong.", "bot");
+          console.error("Chatbot error:", err);
+        });
     }
+    
 
     // Input height adjustment
     input.addEventListener("input", () => {
@@ -246,4 +268,5 @@
       }
     };
   }
+  let threadId = null;
 })();
