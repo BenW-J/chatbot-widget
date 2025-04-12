@@ -4,10 +4,10 @@
 
   const config = window.chatbotWidgetConfig || {
     botName: "Connie",
-    welcomeMessage: "Hi, what sort of tradesperson are you looking for today?",
+    welcomeMessage: "Hi there! I’m Connie, your Build Connector assistant. I’m here to help you find the right construction professional for your project. What type of service are you looking for today",
     options: ["Shop Fitter", "Electrician", "Plumber", "Builder"],
     theme: {
-      accent: "#6366f1",
+      accent: "#3539f2",
       bgColor: "#f9fafb"
     },
     avatar: "./animations/Muslim Woman.json" // or use an image
@@ -35,13 +35,22 @@
     widget.className = "fixed bottom-4 right-4 z-[9999] font-sans";
 
     widget.innerHTML = `
-      <button id="chatbot-open" class="w-14 h-14 rounded-full bg-[${config.theme.accent}] text-white text-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out">
-        💬
-      </button>
+        <button id="chatbot-open" class="w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out overflow-hidden bg-transparent p-0">
+            <lottie-player
+              src="./animations/email support.json"
+              background="transparent"
+              speed="1"
+              autoplay
+              loop
+              style="width: 64px; height: 64px"
+            ></lottie-player>
+          </button>
+
 
       <div id="chatbot-window"
-        class="hidden w-100 h-[600px] flex flex-col bg-white rounded-2xl shadow-xl overflow-hidden transition-all transform scale-95 opacity-0 duration-300"
+        class="hidden w-[90vw] max-w-md h-[75vh] sm:w-96 sm:h-[600px] flex flex-col bg-white rounded-2xl shadow-xl overflow-hidden transition-all transform scale-95 opacity-0 duration-300"
       >
+
         <!-- Header -->
         <div class="flex items-center justify-between px-4 py-3 border-b bg-white">
           <div class="flex items-center gap-2">
@@ -192,28 +201,53 @@
 
     function appendOptions(options) {
       const wrapper = document.createElement("div");
+      wrapper.id = "chatbot-options";
       wrapper.className = "flex flex-wrap gap-2 self-start";
-
+    
       options.forEach((opt) => {
         const btn = document.createElement("button");
         btn.textContent = opt;
         btn.className = `px-3 py-[6px] border text-sm rounded-full text-[${config.theme.accent}] border-[${config.theme.accent}] hover:bg-[${config.theme.accent}] hover:text-white transition`;
+        
         btn.onclick = () => {
-          appendMessage(opt, "user");
-          wrapper.remove();
-
+          const message = `I need a ${opt}`;
+          appendMessage(message, "user");
+          wrapper.remove(); // remove options from the UI
+          threadId = null; // reset thread if needed
+          input.value = ""; // just in case
+          input.style.height = "auto";
+    
           const typing = appendTypingIndicator();
-          setTimeout(() => {
-            removeTypingIndicator(typing);
-            appendMessage(`Thanks for choosing ${opt}!`, "bot");
-          }, 1000);
+    
+          fetch("https://buildconnect1.bwagjor.workers.dev", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userQuery: message, threadId })
+          })
+            .then(res => res.json())
+            .then(data => {
+              threadId = data.threadId;
+              removeTypingIndicator(typing);
+              if (data.reply) {
+                appendMessage(data.reply.trim(), "bot");
+              } else {
+                appendMessage("Sorry, no reply received.", "bot");
+              }
+            })
+            .catch(err => {
+              removeTypingIndicator(typing);
+              appendMessage("Something went wrong.", "bot");
+              console.error("Chatbot error:", err);
+            });
         };
+    
         wrapper.appendChild(btn);
       });
-
+    
       messages.appendChild(wrapper);
       messages.scrollTop = messages.scrollHeight;
     }
+    
 
     function handleSend() {
       const msg = input.value.trim();
