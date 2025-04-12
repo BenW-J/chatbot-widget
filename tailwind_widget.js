@@ -4,7 +4,7 @@
 
   const config = window.chatbotWidgetConfig || {
     botName: "Connie",
-    welcomeMessage: "Hi there! I’m Connie, your Build Connector assistant. I’m here to help you find the right construction professional for your project. What type of service are you looking for today",
+    welcomeMessage: "Hi there! I’m Connie from Build Connector. I can help you find the right construction professional — what type of service do you need?",
     options: ["Shop Fitter", "Electrician", "Plumber", "Builder"],
     theme: {
       accent: "#3539f2",
