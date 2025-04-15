@@ -14,20 +14,20 @@
     avatar: "./animations/support_woman.json" // or use an image
   };
 
-  // Load Tailwind
-  const twScript = document.createElement("script");
-  twScript.src = "https://cdn.tailwindcss.com";
-  document.head.appendChild(twScript);
+    // Inject compiled CSS from jsDelivr
+    const style = document.createElement("link");
+    style.rel = "stylesheet";
+    style.href = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/widget.css";
+    document.head.appendChild(style);
 
-  // After Tailwind loads, load Lottie, then init the widget
-  twScript.onload = () => {
+    // Load Lottie, then init
     const lottieScript = document.createElement("script");
     lottieScript.src = "https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js";
     lottieScript.onload = () => {
-      initChatWidget(); // ✅ start only after Lottie is available
+    initChatWidget();
     };
     document.head.appendChild(lottieScript);
-  };
+
 
   // All chatbot logic inside this
   function initChatWidget() {
