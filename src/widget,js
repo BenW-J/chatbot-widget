@@ -10,7 +10,7 @@
       accent: "#3539f2",
       bgColor: "#f9fafb"
     },
-    avatar: "./animations/Muslim Woman.json" // or use an image
+    avatar: "./animations/support_woman.json" // or use an image
   };
 
   // Load Tailwind
@@ -37,7 +37,7 @@
     widget.innerHTML = `
         <button id="chatbot-open" class="w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out overflow-hidden bg-transparent p-0">
             <lottie-player
-              src="./animations/email support.json"
+              src="./animations/email_support.json"
               background="transparent"
               speed="1"
               autoplay
@@ -145,8 +145,8 @@
           avatar.setAttribute("autoplay", true);
           avatar.setAttribute("loop", true);
           avatar.setAttribute("background", "transparent");
-          avatar.style.width = "24px";
-          avatar.style.height = "24px";
+          avatar.style.width = "36px";
+          avatar.style.height = "36px";
         } else {
           avatar = document.createElement("img");
           avatar.src = config.avatar;

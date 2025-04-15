@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/BenW-J/chatbot-widget/issues"
   },
-  "homepage": "https://github.com/BenW-J/chatbot-widget#readme"
+  "homepage": "https://github.com/BenW-J/chatbot-widget#readme",
+  "keywords": [],
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.4",
+    "tailwindcss": "^4.1.4"
+  }
 }
