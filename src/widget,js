@@ -1,3 +1,4 @@
+//V1.0.0
 (function () {
   if (window.__chatbotWidgetLoaded) return;
   window.__chatbotWidgetLoaded = true;
