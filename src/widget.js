@@ -3,11 +3,21 @@
   if (window.__chatbotWidgetLoaded) return;
   window.__chatbotWidgetLoaded = true;
 
-  const emailIconURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/Email_Support.json";
-  const avatarURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/Support_Woman.json";
+  const emailIconURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/email_support.json";
+  const avatarURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/support_woman.json";
 
-
-
+  window.ChatbotWidget = {
+    open: () => {
+      const win = document.querySelector("#chatbot-widget-host").shadowRoot.querySelector("#chatbot-window");
+      const btnOpen = document.querySelector("#chatbot-widget-host").shadowRoot.querySelector("#chatbot-open");
+      if (win && btnOpen) {
+        win.classList.remove("hidden", "scale-95", "opacity-0");
+        win.classList.add("scale-100", "opacity-100");
+        btnOpen.classList.add("hidden");
+      }
+    }
+  };
+  
   const config = window.chatbotWidgetConfig || {
     botName: "Connie",
     welcomeMessage: "Hi there! I’m Connie from Build Connector. I can help you find the right construction professional — what type of service do you need?",
@@ -37,10 +47,22 @@
 
   // All chatbot logic inside this
   function initChatWidget() {
-    const widget = document.createElement("div");
-    widget.id = "chatbot-widget";
-    widget.className = "fixed bottom-4 right-4 z-[9999] font-sans";
+    const host = document.createElement("div");
+    host.id = "chatbot-widget-host";
+    host.style.position = "fixed";
+    host.style.bottom = "1rem";
+    host.style.right = "1rem";
+    host.style.zIndex = "9999";
 
+    const shadow = host.attachShadow({ mode: "open" });
+
+    const styleLink = document.createElement("link");
+    styleLink.rel = "stylesheet";
+    styleLink.href = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/widget.css";
+
+    shadow.appendChild(styleLink);
+
+    const widget = document.createElement("div");
     widget.innerHTML = `
         <button id="chatbot-open" class="w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out overflow-hidden bg-transparent p-0">
             <lottie-player
@@ -92,12 +114,13 @@
       </div>
     `;
 
-    document.body.appendChild(widget);
+    shadow.appendChild(widget);
+    document.body.appendChild(host);
 
-    const btnOpen = document.getElementById("chatbot-open");
-    const btnClose = document.getElementById("chatbot-close");
-    const win = document.getElementById("chatbot-window");
-    const input = document.getElementById("chatbot-input");
+    const btnOpen = shadow.getElementById("chatbot-open");
+    const btnClose = shadow.getElementById("chatbot-close");
+    const win = shadow.getElementById("chatbot-window");
+    const input = shadow.getElementById("chatbot-input");
     input.addEventListener("focus", () => {
       input.style.boxShadow = `0 0 0 1px ${config.theme.accent}`;
     });
@@ -106,8 +129,8 @@
       input.style.boxShadow = "none";
     });
     
-    const sendBtn = document.getElementById("chatbot-send");
-    const messages = document.getElementById("chatbot-messages");
+    const sendBtn = shadow.getElementById("chatbot-send");
+    const messages = shadow.getElementById("chatbot-messages");
 
     function showWindow() {
       win.classList.remove("hidden");
@@ -275,7 +298,7 @@
     }
     
     function removeOptions() {
-      const optWrapper = document.getElementById("chatbot-options");
+      const optWrapper = shadow.getElementById("chatbot-options");
       if (optWrapper) optWrapper.remove();
     }
   
