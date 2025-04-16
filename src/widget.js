@@ -3,6 +3,11 @@
   if (window.__chatbotWidgetLoaded) return;
   window.__chatbotWidgetLoaded = true;
 
+  const emailIconURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/Email_Support.json";
+  const avatarURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/Support_Woman.json";
+
+
+
   const config = window.chatbotWidgetConfig || {
     botName: "Connie",
     welcomeMessage: "Hi there! I’m Connie from Build Connector. I can help you find the right construction professional — what type of service do you need?",
@@ -11,12 +16,13 @@
       accent: "#3539f2",
       bgColor: "#f9fafb"
     },
-    avatar: "./animations/support_woman.json" // or use an image
+    avatar: avatarURL
   };
 
     // Inject compiled CSS from jsDelivr
     const style = document.createElement("link");
     style.rel = "stylesheet";
+    //style.href = "./widget.css";
     style.href = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/widget.css";
     document.head.appendChild(style);
 
@@ -38,7 +44,7 @@
     widget.innerHTML = `
         <button id="chatbot-open" class="w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out overflow-hidden bg-transparent p-0">
             <lottie-player
-              src="./animations/email_support.json"
+              src="${emailIconURL}"
               background="transparent"
               speed="1"
               autoplay
@@ -66,20 +72,21 @@
         </div>
 
         <!-- Messages -->
-        <div id="chatbot-messages" class="flex-1 px-4 py-3 overflow-y-auto bg-[${config.theme.bgColor}] text-sm space-y-3 flex flex-col"></div>
+        <div id="chatbot-messages" class="flex-1 px-4 py-3 overflow-y-auto text-sm space-y-3 flex flex-col"
+               style="background-color: ${config.theme.bgColor};" ></div>
 
         <!-- Input -->
         <div class="border-t border-gray-200 bg-white px-2 py-2">
           <div class="flex items-end gap-2">
             <textarea
               id="chatbot-input"
-              rows="1"
-              placeholder="Write a message..."
-              class="flex-1 resize-none px-4 py-2 text-sm border rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[${config.theme.accent}]
-              min-h-[36px] max-h-[90px] overflow-y-auto leading-tight"
+              class="flex-1 resize-none px-4 py-2 text-sm border rounded-full shadow-sm min-h-[36px] max-h-[90px] overflow-y-auto leading-tight focus:outline-none"
               style="line-height: 1.4; height: auto;"
             ></textarea>
-            <button id="chatbot-send" class="text-[${config.theme.accent}] text-xl hover:scale-110 transition">➤</button>
+            <button id="chatbot-send"
+                class="text-xl hover:scale-110 transition"
+                style="color: ${config.theme.accent};">➤</button>
+
           </div>
         </div>
       </div>
@@ -91,6 +98,14 @@
     const btnClose = document.getElementById("chatbot-close");
     const win = document.getElementById("chatbot-window");
     const input = document.getElementById("chatbot-input");
+    input.addEventListener("focus", () => {
+      input.style.boxShadow = `0 0 0 1px ${config.theme.accent}`;
+    });
+    
+    input.addEventListener("blur", () => {
+      input.style.boxShadow = "none";
+    });
+    
     const sendBtn = document.getElementById("chatbot-send");
     const messages = document.getElementById("chatbot-messages");
 
@@ -208,8 +223,18 @@
       options.forEach((opt) => {
         const btn = document.createElement("button");
         btn.textContent = opt;
-        btn.className = `px-3 py-[6px] border text-sm rounded-full text-[${config.theme.accent}] border-[${config.theme.accent}] hover:bg-[${config.theme.accent}] hover:text-white transition`;
-        
+        btn.className = "px-3 py-[6px] border text-sm rounded-full transition";
+        btn.style.color = config.theme.accent;
+        btn.style.borderColor = config.theme.accent;
+        btn.onmouseover = () => {
+          btn.style.backgroundColor = config.theme.accent;
+          btn.style.color = "#fff";
+        };
+        btn.onmouseout = () => {
+          btn.style.backgroundColor = "";
+          btn.style.color = config.theme.accent;
+        };
+
         btn.onclick = () => {
           const message = `I need a ${opt}`;
           appendMessage(message, "user");
@@ -249,11 +274,17 @@
       messages.scrollTop = messages.scrollHeight;
     }
     
+    function removeOptions() {
+      const optWrapper = document.getElementById("chatbot-options");
+      if (optWrapper) optWrapper.remove();
+    }
+  
 
     function handleSend() {
       const msg = input.value.trim();
       if (!msg) return;
-    
+
+      removeOptions(); // Hide buttons if visible    
       appendMessage(msg, "user");
       input.value = "";
       input.style.height = "auto";
