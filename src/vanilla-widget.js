@@ -70,8 +70,6 @@
           overflow: hidden;
           transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
         "
-        onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0,0,0,0.15)'"
-        onmouseout="this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'"
       >
         <lottie-player
           src="${emailIconURL}"
@@ -175,16 +173,55 @@
         </div>
       </div>
     `;
+    const styleBlock = document.createElement("style");
+    styleBlock.textContent = `
+      /* Reset & Base */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        line-height: 1.4;
+        font-family: 'Inter', sans-serif;
+        vertical-align: middle;
+      }
     
-    const fontStyle = document.createElement("style");
-    fontStyle.textContent = `
-    :host, * {
-      font-family: 'Inter', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-  `;  
-    shadow.appendChild(fontStyle);
+      :host {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    
+      textarea, button {
+        font: inherit;
+      }
+    
+      /* Lottie fix */
+      lottie-player {
+        vertical-align: middle;
+        display: block;
+      }
+    
+      /* Interactions */
+      #chatbot-open:hover {
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+      }
+    
+      #chatbot-send:hover {
+        transform: scale(1.1);
+      }
+    
+      #chatbot-close:hover {
+        color: #4b5563;
+      }
+    
+      /* Bounce animation */
+      @keyframes bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+      }
+    `;
+    shadow.appendChild(styleBlock);
+    
     const responsiveStyle = document.createElement("style");
     responsiveStyle.textContent = `
       @media (min-width: 640px) {
@@ -201,19 +238,7 @@
         }
         }
     `;
-    shadow.appendChild(responsiveStyle);
-    
-
-    const keyframeStyle = document.createElement("style");
-    keyframeStyle.textContent = `
-    @keyframes bounce {
-        0%, 80%, 100% { transform: scale(0); }
-        40% { transform: scale(1); }
-    }
-    `;
-      shadow.appendChild(keyframeStyle);
-
-  
+      shadow.appendChild(responsiveStyle);
       shadow.appendChild(widget);
       shadow.host.setAttribute("lang", "en");
 
