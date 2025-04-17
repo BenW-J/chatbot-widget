@@ -3,7 +3,8 @@
     if (window.__chatbotWidgetLoaded) return;
     window.__chatbotWidgetLoaded = true;
   
-    const emailIconURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/email-support.json";
+    const emailIconURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/lil-bot.json";
+    //const emailIconURL = "./animations/lil-bot.json";
     const avatarURL = "https://cdn.jsdelivr.net/gh/BenW-J/chatbot-widget@main/src/animations/support-woman.json";
   
     window.ChatbotWidget = {
@@ -61,11 +62,11 @@
       widget.innerHTML = `
       <button id="chatbot-open" aria-label="Open chat"
         style="
-          width: 64px;
-          height: 64px;
+          width: 96px;
+          height: 96px;
           border-radius: 50%;
           box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-          background: transparent;
+          background:rgba(22, 24, 141, 0.58);
           padding: 0;
           overflow: hidden;
           transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -77,7 +78,7 @@
           speed="1"
           autoplay
           loop
-          style="width: 64px; height: 64px"
+          style="width: 96px; height: 96px"
         ></lottie-player>
       </button>
     
