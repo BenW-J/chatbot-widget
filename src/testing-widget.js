@@ -22,7 +22,12 @@
   
     const style = document.createElement("style");
     style.textContent = `
-      #lottie-button {
+        :host {
+        all: initial;
+        }
+    
+        #lottie-button {
+        all: unset;
         width: 96px;
         height: 96px;
         border-radius: 50%;
@@ -35,15 +40,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-      }
-  
-      dotlottie-player {
-        width: 80%;
-        height: 80%;
+        }
+    
+        dotlottie-player {
+        width: 100%;
+        height: 100%;
         display: block;
         box-sizing: border-box;
         vertical-align: middle;
-      }
+        margin: 0;
+        padding: 0;
+        }
     `;
     shadow.appendChild(style);
   
