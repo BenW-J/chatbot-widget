@@ -29,26 +29,9 @@
       avatar: avatarURL
     };
     
-      // Load Lottie, then init
-      const lottieScript = document.createElement("script");
-      lottieScript.src = "https://unpkg.com/@lottiefiles/lottie-player@2.0.2/dist/lottie-player.js";
-      lottieScript.onload = () => {
-        try {
-          initChatWidget();
-        } catch (e) {
-          console.error("Chatbot widget failed to initialize:", e);
-        }
-      };
-      lottieScript.onerror = (error) => {
-        console.error("Failed to load Lottie player:", error);
-        // Fallback to static image if Lottie fails
-        const fallbackImage = document.createElement("img");
-        fallbackImage.src = "path/to/fallback-image.png";
-        // Replace Lottie players with fallback images
-      };      
-      document.head.appendChild(lottieScript);
+
   
-  
+    
     // All chatbot logic inside this
     function initChatWidget() {
       const host = document.createElement("div");
@@ -59,6 +42,21 @@
       host.style.zIndex = "9999";
   
       const shadow = host.attachShadow({ mode: "open" });
+
+      const moduleScript = document.createElement("script");
+      moduleScript.type = "module";
+      moduleScript.textContent = `
+        import 'https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs';
+      `;
+      moduleScript.onload = () => {
+        try {
+          renderChatWidget(shadow, host);
+        } catch (e) {
+          console.error("Chatbot widget failed to render:", e);
+        }
+      };    
+      shadow.appendChild(moduleScript);
+
 
       const fontLink = document.createElement("link");
       fontLink.rel = "stylesheet";
@@ -81,16 +79,15 @@
         "
       >
         <div class="lottie-container">
-          <lottie-player
+          <dotlottie-player
             src="${emailIconURL}"
-            background="transparent"
-            speed="1"
             autoplay
             loop
-            style="width: 96px; height: 96px"
-            renderer="svg"
+            background="transparent"
             mode="normal"
-          ></lottie-player>
+            renderer="svg"
+            loading="lazy"
+          ></dotlottie-player>
         </div>
       </button>
     
@@ -122,7 +119,7 @@
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             ${
               config.avatar.endsWith(".json")
-                ? `<div class="lottie-container"><lottie-player src="${config.avatar}" background="transparent" speed="1" style="width: 42px; height: 42px;" autoplay loop renderer="svg" mode="normal"></lottie-player></div>`
+                ? `<div class="lottie-container"><dotlottie-player src="${config.avatar}" background="transparent" speed="1" style="width: 42px; height: 42px;" autoplay loop renderer="svg" mode="normal"></dotlottie-player></div>`
                 : `<img src="${config.avatar}" style="width: 24px; height: 24px; border-radius: 50%;" alt="bot avatar"/>`
             }
             <div style="font-weight: 600; font-size: 0.875rem;">${config.botName}</div>
@@ -208,49 +205,12 @@
         font: inherit;
       }
     
-      /* Enhanced Lottie Player Styling */
-      lottie-player {
-        vertical-align: middle;
+      dotlottie-player {
+        width: 100%;
+        height: 100%;
         display: block;
-        contain: content;
-        isolation: isolate;
-        pointer-events: none;
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-      }
-
-      lottie-player::part(player) {
-        contain: content;
-        isolation: isolate;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      lottie-player::part(container) {
-        contain: content;
-        isolation: isolate;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      /* Container for Lottie Player */
-      .lottie-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        contain: content;
-        isolation: isolate;
+        box-sizing: border-box;
+        vertical-align: middle;
       }
     
       /* Interactions */
@@ -273,7 +233,7 @@
       }
     `;
     shadow.appendChild(styleBlock);
-    
+   
     const responsiveStyle = document.createElement("style");
     responsiveStyle.textContent = `
       @media (min-width: 640px) {
@@ -367,17 +327,17 @@
   
         if (sender === "bot" && config.avatar) {
           let avatar;
-          if (window.customElements?.get("lottie-player") && config.avatar.endsWith(".json")) {
-            avatar = document.createElement("lottie-player");
+          if (config.avatar.endsWith(".json") || config.avatar.endsWith(".lottie")) {
+            avatar = document.createElement("dotlottie-player");
             avatar.setAttribute("src", config.avatar);
             avatar.setAttribute("autoplay", true);
             avatar.setAttribute("loop", true);
             avatar.setAttribute("background", "transparent");
+            avatar.setAttribute("mode", "normal");
+            avatar.setAttribute("renderer", "svg");
+            avatar.setAttribute("loading", "lazy");
             avatar.style.width = "36px";
             avatar.style.height = "36px";
-            avatar.setAttribute("renderer", "svg");
-            avatar.setAttribute("mode", "normal");
-            avatar.setAttribute("loading", "lazy");
           } else {
             avatar = document.createElement("img");
             avatar.src = config.avatar;
@@ -386,6 +346,7 @@
             avatar.style.height = "24px";
             avatar.style.borderRadius = "9999px";            
           }
+          
           wrapper.insertBefore(avatar, bubble);
         }
   
@@ -402,25 +363,25 @@
         wrapper.style.gap = "0.5rem";
   
         let avatar;
-        if (window.customElements?.get("lottie-player") && config.avatar.endsWith(".json")) {
-          avatar = document.createElement("lottie-player");
+        if (config.avatar.endsWith(".json") || config.avatar.endsWith(".lottie")) {
+          avatar = document.createElement("dotlottie-player");
           avatar.setAttribute("src", config.avatar);
           avatar.setAttribute("autoplay", true);
           avatar.setAttribute("loop", true);
           avatar.setAttribute("background", "transparent");
-          avatar.style.width = "24px";
-          avatar.style.height = "24px";
-          avatar.setAttribute("renderer", "svg");
           avatar.setAttribute("mode", "normal");
+          avatar.setAttribute("renderer", "svg");
           avatar.setAttribute("loading", "lazy");
+          avatar.style.width = "36px";
+          avatar.style.height = "36px";
         } else {
           avatar = document.createElement("img");
           avatar.src = config.avatar;
           avatar.alt = "bot avatar";
           avatar.style.width = "24px";
           avatar.style.height = "24px";
-          avatar.style.borderRadius = "9999px";          
-        }
+          avatar.style.borderRadius = "9999px";            
+        }        
         wrapper.appendChild(avatar);
   
         const dots = document.createElement("div");
@@ -575,6 +536,7 @@
         }
       };
     }
+    initChatWidget();
     let threadId = null;
   })();
   
