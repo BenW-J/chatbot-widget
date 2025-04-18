@@ -29,18 +29,18 @@
         background: rgba(22, 24, 141, 0.58);
         box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
         padding: 0;
-        overflow: visible;
+        overflow: hidden;
         border: none;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
   
       dotlottie-player {
-        all: initial;
+        width: 80%;
+        height: 80%;
         display: block;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
         vertical-align: middle;
       }
