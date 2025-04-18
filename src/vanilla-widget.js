@@ -20,7 +20,7 @@
     
     const config = window.chatbotWidgetConfig || {
       botName: "Connie",
-      welcomeMessage: "Hi there! I’m Connie from Build Connector. I can help you find the right construction professional — what type of service do you need?",
+      welcomeMessage: "Hi there! I'm Connie from Build Connector. I can help you find the right construction professional — what type of service do you need?",
       options: ["Shop Fitter", "Electrician", "Plumber", "Builder"],
       theme: {
         accent: "#3539f2",
@@ -31,13 +31,20 @@
     
       // Load Lottie, then init
       const lottieScript = document.createElement("script");
-      lottieScript.src = "https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js";
+      lottieScript.src = "https://unpkg.com/@lottiefiles/lottie-player@2.0.2/dist/lottie-player.js";
       lottieScript.onload = () => {
         try {
           initChatWidget();
         } catch (e) {
           console.error("Chatbot widget failed to initialize:", e);
         }
+      };
+      lottieScript.onerror = (error) => {
+        console.error("Failed to load Lottie player:", error);
+        // Fallback to static image if Lottie fails
+        const fallbackImage = document.createElement("img");
+        fallbackImage.src = "path/to/fallback-image.png";
+        // Replace Lottie players with fallback images
       };      
       document.head.appendChild(lottieScript);
   
@@ -79,6 +86,9 @@
           autoplay
           loop
           style="width: 96px; height: 96px"
+          renderer="svg"
+          mode="normal"
+          loading="lazy"
         ></lottie-player>
       </button>
     
@@ -196,10 +206,23 @@
         font: inherit;
       }
     
-      /* Lottie fix */
+      /* Enhanced Lottie Player Styling */
       lottie-player {
         vertical-align: middle;
         display: block;
+        contain: content;
+        isolation: isolate;
+        pointer-events: none;
+      }
+
+      lottie-player::part(player) {
+        contain: content;
+        isolation: isolate;
+      }
+
+      lottie-player::part(container) {
+        contain: content;
+        isolation: isolate;
       }
     
       /* Interactions */
@@ -324,6 +347,9 @@
             avatar.setAttribute("background", "transparent");
             avatar.style.width = "36px";
             avatar.style.height = "36px";
+            avatar.setAttribute("renderer", "svg");
+            avatar.setAttribute("mode", "normal");
+            avatar.setAttribute("loading", "lazy");
           } else {
             avatar = document.createElement("img");
             avatar.src = config.avatar;
@@ -356,6 +382,9 @@
           avatar.setAttribute("background", "transparent");
           avatar.style.width = "24px";
           avatar.style.height = "24px";
+          avatar.setAttribute("renderer", "svg");
+          avatar.setAttribute("mode", "normal");
+          avatar.setAttribute("loading", "lazy");
         } else {
           avatar = document.createElement("img");
           avatar.src = config.avatar;
