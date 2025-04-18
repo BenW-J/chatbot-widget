@@ -77,19 +77,21 @@
           padding: 0;
           overflow: hidden;
           transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+          position: relative;
         "
       >
-        <lottie-player
-          src="${emailIconURL}"
-          background="transparent"
-          speed="1"
-          autoplay
-          loop
-          style="width: 96px; height: 96px"
-          renderer="svg"
-          mode="normal"
-          loading="lazy"
-        ></lottie-player>
+        <div class="lottie-container">
+          <lottie-player
+            src="${emailIconURL}"
+            background="transparent"
+            speed="1"
+            autoplay
+            loop
+            style="width: 96px; height: 96px"
+            renderer="svg"
+            mode="normal"
+          ></lottie-player>
+        </div>
       </button>
     
       <div id="chatbot-window"
@@ -120,7 +122,7 @@
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             ${
               config.avatar.endsWith(".json")
-                ? `<lottie-player src="${config.avatar}" background="transparent" speed="1" style="width: 42px; height: 42px;" autoplay loop></lottie-player>`
+                ? `<div class="lottie-container"><lottie-player src="${config.avatar}" background="transparent" speed="1" style="width: 42px; height: 42px;" autoplay loop renderer="svg" mode="normal"></lottie-player></div>`
                 : `<img src="${config.avatar}" style="width: 24px; height: 24px; border-radius: 50%;" alt="bot avatar"/>`
             }
             <div style="font-weight: 600; font-size: 0.875rem;">${config.botName}</div>
@@ -213,14 +215,40 @@
         contain: content;
         isolation: isolate;
         pointer-events: none;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
       }
 
       lottie-player::part(player) {
         contain: content;
         isolation: isolate;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
       }
 
       lottie-player::part(container) {
+        contain: content;
+        isolation: isolate;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* Container for Lottie Player */
+      .lottie-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
         contain: content;
         isolation: isolate;
       }
