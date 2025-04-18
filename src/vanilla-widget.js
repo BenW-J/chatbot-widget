@@ -185,7 +185,10 @@
     `;
     const styleBlock = document.createElement("style");
     styleBlock.textContent = `
-      /* Reset & Base */
+      :host {
+        all: initial;
+      }
+    
       *, *::before, *::after {
         box-sizing: border-box;
         margin: 0;
@@ -195,14 +198,20 @@
         vertical-align: middle;
       }
     
-      :host {
-        font-family: 'Inter', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    
-      textarea, button {
-        font: inherit;
+      #chatbot-open {
+        all: unset;
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: rgba(22, 24, 141, 0.58);
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        padding: 0;
+        overflow: hidden;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     
       dotlottie-player {
@@ -211,9 +220,10 @@
         display: block;
         box-sizing: border-box;
         vertical-align: middle;
+        margin: 0;
+        padding: 0;
       }
     
-      /* Interactions */
       #chatbot-open:hover {
         box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
       }
@@ -226,13 +236,13 @@
         color: #4b5563;
       }
     
-      /* Bounce animation */
       @keyframes bounce {
         0%, 80%, 100% { transform: scale(0); }
         40% { transform: scale(1); }
       }
     `;
     shadow.appendChild(styleBlock);
+    
    
     const responsiveStyle = document.createElement("style");
     responsiveStyle.textContent = `
