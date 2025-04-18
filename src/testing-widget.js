@@ -29,15 +29,20 @@
         background: rgba(22, 24, 141, 0.58);
         box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
         padding: 0;
-        overflow: hidden;
+        overflow: visible;
         border: none;
         cursor: pointer;
       }
   
       dotlottie-player {
-        width: 96px;
-        height: 96px;
+        all: initial;
         display: block;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        vertical-align: middle;
       }
     `;
     shadow.appendChild(style);
@@ -52,6 +57,7 @@
         background="transparent"
         mode="normal"
         renderer="svg"
+        loading="lazy"
       ></dotlottie-player>
     `;
     shadow.appendChild(button);
